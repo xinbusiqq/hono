@@ -286,17 +286,10 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
      * This method creates a router instance along with a route matching all request. That route is initialized with the
      * following handlers and failure handlers:
      * <ol>
-     * <li>将 Micrometer {@code Timer.Sample} 添加到路由上下文的处理程序
-     * a handler to add a Micrometer {@code Timer.Sample} to the routing context,</li>
-     * <li>为所有服务器请求创建跟踪数据的处理程序和故障处理程序
-     * a handler and failure handler that creates tracing data for all server requests,</li>
-     * <li>处理程序记录连接过早关闭
-     * a handler to log when the connection is closed prematurely,</li>
-     * <li>默认失败处理程序
-     * a default failure handler,</li>
-     * <li>将请求的主体大小限制为 <em>config</em> 属性中设置的最大有效负载大小的处理程序
-     *     a handler limiting the body size of requests to the maximum payload size set in the <em>config</em>
-     * properties.</li>
+     * <li>a handler to add a Micrometer {@code Timer.Sample} to the routing context,</li>
+     * <li>a handler and failure handler that creates tracing data for all server requests,</li>
+     * <li>a handler to log when the connection is closed prematurely,</li>
+     * <li>a default failure handler,</li>
      * </ol>
      *
      * @return The newly created router (never {@code null}).
@@ -330,13 +323,6 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
         // 4. 失败路由的默认处理程序
         // 4. default handler for failed routes
         matchAllRoute.failureHandler(new DefaultFailureHandler());
-
-        // 5. 请求大小限制的 BodyHandler
-        // 5. BodyHandler with request size limit
-        log.info("limiting size of inbound request body to {} bytes", getConfig().getMaxPayloadSize());
-        final BodyHandler bodyHandler = BodyHandler.create(DEFAULT_UPLOADS_DIRECTORY)
-                .setBodyLimit(getConfig().getMaxPayloadSize());
-        matchAllRoute.handler(bodyHandler);
         return router;
     }
 
@@ -403,8 +389,10 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     protected HttpServerOptions getHttpServerOptions() {
 
         final HttpServerOptions options = new HttpServerOptions();
-        options.setHost(getConfig().getBindAddress()).setPort(getConfig().getPort(getPortDefaultValue()))
-            .setMaxChunkSize(4096);
+        options.setHost(getConfig().getBindAddress())
+                .setPort(getConfig().getPort(getPortDefaultValue()))
+                .setMaxChunkSize(4096)
+                .setIdleTimeout(getConfig().getIdleTimeout());
         addTlsKeyCertOptions(options);
         addTlsTrustOptions(options);
         return options;
@@ -423,7 +411,10 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     protected HttpServerOptions getInsecureHttpServerOptions() {
 
         final HttpServerOptions options = new HttpServerOptions();
-        options.setHost(getConfig().getInsecurePortBindAddress()).setPort(getConfig().getInsecurePort(getInsecurePortDefaultValue())).setMaxChunkSize(4096);
+        options.setHost(getConfig().getInsecurePortBindAddress())
+                .setPort(getConfig().getInsecurePort(getInsecurePortDefaultValue()))
+                .setMaxChunkSize(4096)
+                .setIdleTimeout(getConfig().getIdleTimeout());
         return options;
     }
 
