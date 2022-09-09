@@ -16,6 +16,7 @@ package org.eclipse.hono.client.kafka;
 import java.util.Map;
 
 /**
+ * Kafka 管理客户端的配置属性。
  * Configuration properties for Kafka admin clients.
  * <p>
  * This class is intended to be as agnostic to the provided properties as possible in order to be forward-compatible

@@ -52,7 +52,7 @@ public class Config extends AbstractAdapterConfig {
     public VertxBasedHttpProtocolAdapter vertxBasedHttpProtocolAdapter(
             final SendMessageSampler.Factory samplerFactory,
             final HttpAdapterMetrics metrics) {
-
+        log.info("adapter bean实例化");
         final VertxBasedHttpProtocolAdapter adapter = new VertxBasedHttpProtocolAdapter();
         setCollaborators(adapter, adapterProperties(), samplerFactory);
         adapter.setConfig(adapterProperties());
@@ -93,6 +93,7 @@ public class Config extends AbstractAdapterConfig {
     }
 
     /**
+     * 创建 HTTP 适配器实例的工厂。
      * Exposes a factory for creating HTTP adapter instances.
      *
      * @return The factory bean.
@@ -100,6 +101,7 @@ public class Config extends AbstractAdapterConfig {
     @Bean
     public ObjectFactoryCreatingFactoryBean serviceFactory() {
         final ObjectFactoryCreatingFactoryBean factory = new ObjectFactoryCreatingFactoryBean();
+        log.info("初始化工厂");
         factory.setTargetBeanName(BEAN_NAME_VERTX_BASED_HTTP_PROTOCOL_ADAPTER);
         return factory;
     }

@@ -29,6 +29,7 @@ import io.opentracing.Span;
 import io.vertx.core.Future;
 
 /**
+ * 用于管理租户信息的服务
  * A service for managing tenant information.
  * <p>
  * The methods defined by this interface represent the <em>tenant</em> resources
@@ -39,10 +40,13 @@ public interface TenantManagementService {
     /**
      * Creates a new Tenant.
      *
-     * @param tenantId The identifier of the tenant to create. If empty, the service implementation
+     * @param tenantId 要创建的租户的标识符。 如果为空，服务实现将为租户创建一个标识符。
+     *        The identifier of the tenant to create. If empty, the service implementation
      *                 will create an identifier for the tenant.
-     * @param tenantObj The configuration information to add for the tenant.
-     * @param span The active OpenTracing span to use for tracking this operation.
+     * @param tenantObj 要为租户添加的配置信息。
+     *                  The configuration information to add for the tenant.
+     * @param span 用于跟踪此操作的活动 OpenTracing span。
+     *             The active OpenTracing span to use for tracking this operation.
      *             <p>
      *             Implementations <em>must not</em> invoke the {@link Span#finish()} nor the {@link Span#finish(long)}
      *             methods. However,implementations may log (error) events on this span, set tags and use this span

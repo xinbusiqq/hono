@@ -30,6 +30,7 @@ public class AbstractProtocolAdapterApplication extends AbstractApplication {
     private NotificationReceiver notificationReceiver;
 
     /**
+     * 设置要使用的通知接收器。
      * Sets the notification receiver to use.
      *
      * @param notificationReceiver The notification receiver.
@@ -42,6 +43,7 @@ public class AbstractProtocolAdapterApplication extends AbstractApplication {
 
     @Override
     protected Future<Void> deployRequiredVerticles(final int maxInstances) {
+        log.info("加载Verticle，部署通知接收器，step2");
         return getVertx().deployVerticle(new WrappedLifecycleComponentVerticle(notificationReceiver)).mapEmpty();
     }
 }

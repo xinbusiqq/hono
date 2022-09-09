@@ -17,6 +17,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.producer.Producer;
 
 /**
+ * 获取指标的kafka客户端
  * Provides support for registering Kafka clients from which metrics are fetched.
  */
 public interface KafkaClientMetricsSupport {

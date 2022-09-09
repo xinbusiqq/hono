@@ -33,6 +33,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 
 /**
+ * 表示处理 Vert.x HTTP 请求的上下文，包装 Vert.x {@link RoutingContext} 以及实现 {@link org.eclipse.hono.util.ExecutionContext} 接口。
  * Represents the context for the handling of a Vert.x HTTP request, wrapping the Vert.x {@link RoutingContext} as well
  * as implementing the {@link org.eclipse.hono.util.ExecutionContext} interface.
  */

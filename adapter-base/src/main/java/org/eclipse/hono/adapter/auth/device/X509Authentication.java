@@ -21,16 +21,18 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
 /**
+ * 基于 X.509 客户端证书对客户端进行身份验证的策略。
  * A strategy for authenticating clients based on X.509 client certificates.
  *
  */
 public interface X509Authentication {
 
     /**
+     * 验证证书路径。
      * Validates a certificate path.
      *
-     * @param path The certificate path to validate.
-     * @param requestedHostNames The host names conveyed by the client in a TLS SNI extension or {@code null} if
+     * @param path 要验证的证书路径。The certificate path to validate.
+     * @param requestedHostNames 客户端在TLS SNI扩展中传送主机名，或者传null。The host names conveyed by the client in a TLS SNI extension or {@code null} if
      *                          the client did not provide any.
      * @param spanContext The <em>OpenTracing</em> context in which the
      *                    validation should be executed, or {@code null}

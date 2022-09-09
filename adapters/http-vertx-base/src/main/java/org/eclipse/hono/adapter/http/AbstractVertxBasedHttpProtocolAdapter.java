@@ -73,6 +73,7 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
 /**
+ * 基于 Vert.x 的使用 HTTP 协议的 Hono 协议适配器的基类。 它提供对Telemetry和Event API 的访问。
  * Base class for a Vert.x based Hono protocol adapter that uses the HTTP protocol.
  * It provides access to the Telemetry and Event API.
  *
@@ -139,8 +140,11 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     }
 
     /**
+     * 配置为通过 TLS 安全套接字服务请求的 http 服务器实例。
      * Sets the http server instance configured to serve requests over a TLS secured socket.
      * <p>
+     *     如果没有使用此方法设置服务器，则在此适配器启动期间根据 <em>config</em> 属性
+     *     和 {@link #getHttpServerOptions()} 返回的服务器选项创建服务器实例。
      * If no server is set using this method, then a server instance is created during
      * startup of this adapter based on the <em>config</em> properties and the server options
      * returned by {@link #getHttpServerOptions()}.
@@ -159,8 +163,11 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     }
 
     /**
+     * 配置为通过普通套接字服务请求的 http 服务器实例。
      * Sets the http server instance configured to serve requests over a plain socket.
      * <p>
+     *     如果没有使用此方法设置服务器，则在此适配器启动期间根据 <em>config</em> 属性
+     *     和 {@link #getInsecureHttpServerOptions()} 返回的服务器选项创建服务器实例。
      * If no server is set using this method, then a server instance is created during
      * startup of this adapter based on the <em>config</em> properties and the server options
      * returned by {@link #getInsecureHttpServerOptions()}.
@@ -272,16 +279,23 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     }
 
     /**
+     * 创建用于处理请求的router。
      * Creates the router for handling requests.
      * <p>
+     *     此方法创建一个路由器实例以及匹配所有请求的路由。 该路由使用以下处理程序和失败处理程序进行初始化：
      * This method creates a router instance along with a route matching all request. That route is initialized with the
      * following handlers and failure handlers:
      * <ol>
-     * <li>a handler to add a Micrometer {@code Timer.Sample} to the routing context,</li>
-     * <li>a handler and failure handler that creates tracing data for all server requests,</li>
-     * <li>a handler to log when the connection is closed prematurely,</li>
-     * <li>a default failure handler,</li>
-     * <li>a handler limiting the body size of requests to the maximum payload size set in the <em>config</em>
+     * <li>将 Micrometer {@code Timer.Sample} 添加到路由上下文的处理程序
+     * a handler to add a Micrometer {@code Timer.Sample} to the routing context,</li>
+     * <li>为所有服务器请求创建跟踪数据的处理程序和故障处理程序
+     * a handler and failure handler that creates tracing data for all server requests,</li>
+     * <li>处理程序记录连接过早关闭
+     * a handler to log when the connection is closed prematurely,</li>
+     * <li>默认失败处理程序
+     * a default failure handler,</li>
+     * <li>将请求的主体大小限制为 <em>config</em> 属性中设置的最大有效负载大小的处理程序
+     *     a handler limiting the body size of requests to the maximum payload size set in the <em>config</em>
      * properties.</li>
      * </ol>
      *
@@ -291,16 +305,20 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
 
         final Router router = Router.router(vertx);
         final Route matchAllRoute = router.route();
+        // 处理程序和失败处理程序按特定顺序添加到此处！
         // the handlers and failure handlers are added here in a specific order!
+        // 1. 启动指标计时器的处理程序
         // 1. handler to start the metrics timer
         matchAllRoute.handler(ctx -> {
             ctx.put(KEY_MICROMETER_SAMPLE, getMetrics().startTimer());
             ctx.next();
         });
+        // 2. 追踪处理程序
         // 2. tracing handler
         final TracingHandler tracingHandler = createTracingHandler();
         matchAllRoute.handler(tracingHandler).failureHandler(tracingHandler);
 
+        // 3. 处理程序记录连接过早关闭
         // 3. handler to log when the connection is closed prematurely
         matchAllRoute.handler(ctx -> {
             if (!ctx.response().closed() && !ctx.response().ended()) {
@@ -309,9 +327,11 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
             ctx.next();
         });
 
+        // 4. 失败路由的默认处理程序
         // 4. default handler for failed routes
         matchAllRoute.failureHandler(new DefaultFailureHandler());
 
+        // 5. 请求大小限制的 BodyHandler
         // 5. BodyHandler with request size limit
         log.info("limiting size of inbound request body to {} bytes", getConfig().getMaxPayloadSize());
         final BodyHandler bodyHandler = BodyHandler.create(DEFAULT_UPLOADS_DIRECTORY)
@@ -321,14 +341,18 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     }
 
     /**
+     * 在确定凭据之后和验证之前，Handles的一些操作应作为调用身份验证过程的一部分。 可用于在完成可能昂贵的凭据验证之前使用凭据和租户信息执行检查。
      * Handles any operations that should be invoked as part of the authentication process after the credentials got
      * determined and before they get validated. Can be used to perform checks using the credentials and tenant
      * information before the potentially expensive credentials validation is done
      * <p>
+     *     默认实现会更新执行上下文跟踪跨度中的跟踪采样优先级。
+     *     它还验证通过凭据提供的租户是否已启用，以及是否为该租户启用了适配器，如果两者都不是，则返回的future失败。
      * The default implementation updates the trace sampling priority in the execution context tracing span.
      * It also verifies that the tenant provided via the credentials is enabled and that the adapter is enabled for
      * that tenant, failing the returned future if either is not the case.
      * <p>
+     *     子类应该重写此方法，以便在调用此super方法后执行其他操作。
      * Subclasses should override this method in order to perform additional operations after calling this super method.
      *
      * @param credentials The credentials.
@@ -510,6 +534,7 @@ public abstract class AbstractVertxBasedHttpProtocolAdapter<T extends HttpProtoc
     }
 
     /**
+     * 将 HTTP 请求的正文作为遥测消息上传到 Hono。
      * Uploads the body of an HTTP request as a telemetry message to Hono.
      * <p>
      * This method simply invokes {@link #uploadTelemetryMessage(HttpContext, String, String, Buffer, String)}

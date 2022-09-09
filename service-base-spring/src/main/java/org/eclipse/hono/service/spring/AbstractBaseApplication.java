@@ -38,6 +38,7 @@ import io.vertx.core.json.impl.JsonUtil;
 /**
  * A base class for implementing Spring Boot applications.
  * <p>
+ *     此类提供用于处理配置、Vert.x verticals和健康检查服务器的基本抽象。
  * This class provides basic abstractions for dealing with configuration, Vert.x verticals and health check server.
  */
 public abstract class AbstractBaseApplication implements ApplicationRunner {
@@ -53,6 +54,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     private HealthCheckServer healthCheckServer = new NoopHealthCheckServer();
 
     /**
+     * 设置要部署服务的 Vert.x 实例。
      * Sets the Vert.x instance to deploy the service to.
      *
      * @param vertx The vertx instance.
@@ -64,6 +66,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 获取部署服务的 Vert.x 实例。
      * Gets the Vert.x instance the service gets deployed to.
      *
      * @return The vertx instance.
@@ -73,6 +76,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 设置用于此服务的应用程序配置属性。
      * Sets the application configuration properties to use for this service.
      *
      * @param config The properties.
@@ -84,6 +88,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 获取用于此服务的应用程序配置属性。
      * Gets the application configuration properties used for this service.
      *
      * @return The properties.
@@ -93,6 +98,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 设置此应用程序的健康检查服务。
      * Sets the health check server for this application.
      *
      * @param healthCheckServer The health check server.
@@ -104,8 +110,10 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 在部署服务之前，允许应用程序进行“飞行前”检查。
      * Allow the application to do a "pre-flight" check, before services are deployed.
      * <p>
+     *     尽管当前的实现是空的，覆盖这个方法的类必须调用 super 方法，因为未来的实现可能会有所不同。
      * Although the current implementation is empty, classes overriding this method must call the super method, as
      * future implementations may be different.
      *
@@ -116,13 +124,18 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 启动此应用程序。
      * Starts up this application.
      * <p>
+     *     启动过程需要以下步骤：
      * The start up process entails the following steps:
      * <ol>
-     * <li>invoke {@link #deployVerticles()} to deploy all verticles that should be part of this application</li>
-     * <li>invoke {@link #postDeployVerticles()} to perform any additional post deployment steps</li>
-     * <li>start the health check server</li>
+     * <li>调用 {@link #deployVerticles()} 来部署应该属于这个应用程序的所有 Verticle
+     *  invoke {@link #deployVerticles()} to deploy all verticles that should be part of this application</li>
+     * <li>调用 {@link #postDeployVerticles()} 以执行部署完成后的步骤
+     *  invoke {@link #postDeployVerticles()} to perform any additional post deployment steps</li>
+     * <li>启动健康检查服务
+     *  start the health check server</li>
      * </ol>
      *
      * @param args The command line arguments provided to the application.
@@ -150,7 +163,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
         }
 
         final CompletableFuture<Void> started = new CompletableFuture<>();
-
+        log.info("开始加载Verticle，step1");
         deployVerticles()
             .compose(s -> postDeployVerticles())
             .compose(s -> healthCheckServer.start())
@@ -161,10 +174,13 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 部署此应用程序所需的 Verticle。
      * Deploy verticles required by this application.
      * <p>
+     *     这是一个通用的方法，部署所有应该属于这个应用程序的 Verticle。
      * This is a generic method, deploying all verticles that should be part of this application.
      * <p>
+     *     当前的实现只返回一个成功的Future
      * Although the current implementation only returns a succeeded future, overriding this method it is required to
      * call "super", in order to enable future changes.
      *
@@ -175,10 +191,13 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 在成功部署应用程序 Verticle 后调用。
      * Invoked after the application verticles have been deployed successfully.
      * <p>
+     *     可以被覆盖以提供额外的启动逻辑。
      * May be overridden to provide additional startup logic.
      * <p>
+     *     这个默认实现只是返回一个成功的Future。
      * This default implementation simply returns a succeeded future.
      *
      * @return A future indicating success. Application start-up fails if the returned future fails.
@@ -188,6 +207,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 以受控方式停止此应用程序。
      * Stops this application in a controlled fashion.
      */
     @PreDestroy
@@ -221,6 +241,7 @@ public abstract class AbstractBaseApplication implements ApplicationRunner {
     }
 
     /**
+     * 注册额外的健康检查。
      * Registers additional health checks.
      *
      * @param provider The provider of the health checks.

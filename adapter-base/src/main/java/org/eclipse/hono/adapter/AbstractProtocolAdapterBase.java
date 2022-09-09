@@ -73,8 +73,10 @@ import io.vertx.ext.healthchecks.HealthCheckHandler;
 import io.vertx.ext.healthchecks.Status;
 
 /**
+ * 用于实现协议适配器的基类。
  * A base class for implementing protocol adapters.
  * <p>
+ * 提供与设备注册、telemetry以及event endpoint的连接。
  * Provides connections to device registration and telemetry and event service endpoints.
  *
  * @param <T> The type of configuration properties used by this service.
@@ -142,6 +144,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 获取用于访问租户服务的客户端。
      * Gets the client used for accessing the Tenant service.
      *
      * @return The client.
@@ -152,6 +155,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 设置用于访问命令路由器服务的客户端。
      * Sets the client to use for accessing the Command Router service.
      * <p>
      * Either this client or the Device Connection client needs to be set for
@@ -220,14 +224,20 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
         this.credentialsClient = Objects.requireNonNull(client);
     }
 
+    /**
+     * 获取用于访问 Credentials 服务的客户端.
+     * @return CredentialsClient
+     */
     @Override
     public final CredentialsClient getCredentialsClient() {
         return credentialsClient;
     }
 
     /**
+     * 设置连接事件生产者
      * Sets the producer for connections events.
      * <p>
+     *     请注意，子类不一定实际发出连接事件。 特别是用于无连接协议的适配器，例如 HTTP 很可能不会发出此类事件。
      * Note that subclasses are not required to actually emit connection events.
      * In particular, adapters for connection-less protocols like e.g. HTTP will
      * most likely not emit such events.
@@ -251,6 +261,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 设置工厂用于创建客户端以接收命令。
      * Sets the factory to use for creating clients to receive commands.
      *
      * @param factory The factory.
@@ -303,11 +314,14 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 建立到此适配器所依赖的服务的连接。
      * Establishes the connections to the services this adapter depends on.
      * <p>
+     *     请注意，当返回的future完成时，连接很可能尚未建立。
      * Note that the connections will most likely not have been established yet, when the
      * returned future completes.
      *
+     * 指示启动过程的结果的future。 如果 {@link #getTypeName()} 方法返回 {@code null} 或空字符串或未设置任何服务客户端，则future将失败。 否则future会成功。
      * @return A future indicating the outcome of the startup process. the future will
      *         fail if the {@link #getTypeName()} method returns {@code null} or an empty string
      *         or if any of the service clients are not set. Otherwise the future will succeed.
@@ -347,10 +361,13 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 在适配器启动后调用。
      * Invoked after the adapter has started up.
      * <p>
+     *     这个默认实现只是完成了promise
      * This default implementation simply completes the promise.
      * <p>
+     *     子类应覆盖此方法以执行启动此协议适配器所需的任何工作。
      * Subclasses should override this method to perform any work required on start-up of this protocol adapter.
      *
      * @param startPromise The promise to complete once start up is complete.
@@ -408,10 +425,13 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 在适配器关闭之前直接调用。
      * Invoked directly before the adapter is shut down.
      * <p>
+     *     这个默认实现总是完成promise。
      * This default implementation always completes the promise.
      * <p>
+     *     子类应覆盖此方法以在关闭此协议适配器之前执行所需的任何工作.
      * Subclasses should override this method to perform any work required before shutting down this protocol adapter.
      *
      * @param stopPromise The promise to complete once all work is done and shut down should commence.
@@ -421,6 +441,11 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
         stopPromise.complete();
     }
 
+    /**
+     * 检查是否为给定租户启用了此适配器，要求租户本身也启用.
+     * @param tenantConfig The tenant to check for.
+     * @return TenantObject
+     */
     @Override
     public final Future<TenantObject> isAdapterEnabled(final TenantObject tenantConfig) {
 
@@ -443,6 +468,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 检查是否已达到来自特定租户设备的所有协议适配器的最大并发连接数。
      * Checks if the maximum number of concurrent connections across all protocol
      * adapters from devices of a particular tenant has been reached.
      * <p>
@@ -518,6 +544,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 检查是否已达到特定租户的所有协议适配器的最大连接持续时间。
      * Checks if the maximum connection duration across all protocol adapters
      * for a particular tenant has been reached.
      * <p>
@@ -554,6 +581,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 验证消息的目标地址是否与 Hono 的寻址规则一致。
      * Validates a message's target address for consistency with Hono's addressing rules.
      *
      * @param address The address to validate.
@@ -604,6 +632,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 检查给定设备是否已注册和启用。
      * Checks whether a given device is registered and enabled.
      *
      * @param device The device to check.
@@ -632,6 +661,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 启动一个服务客户端.
      * Starts a service client.
      * <p>
      * This method invokes the given client's {@link Lifecycle#start()} method.
@@ -662,9 +692,11 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 发送命令Response
      * Forwards a response message that has been sent by a device in reply to a
      * command to the sender of the command.
      * <p>
+     *     此方法打开一个用于发送响应的新链接，尝试发送响应消息，然后再次关闭该链接。
      * This method opens a new link for sending the response, tries to send the
      * response message and then closes the link again.
      *
@@ -674,8 +706,10 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
      * @param context The currently active OpenTracing span. An implementation
      *         should use this as the parent for any span it creates for tracing
      *         the execution of this operation.
+     *         当前活动的OpenTracing范围。实现应将其用作它为跟踪此操作的执行而创建的任何跨度的父级。
      * @return A future indicating the outcome of the attempt to send
      *         the message. The link will be closed in any case.
+     *         指示尝试发送消息的结果的future。 无论如何，该链接将被关闭。
      * @throws NullPointerException if any of the parameters other than context are {@code null}.
      */
     protected final Future<Void> sendCommandResponse(
@@ -726,6 +760,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 更新与给定设备关联的最后一个已知网关。
      * Updates the last known gateway associated with the given device.
      *
      * @param registrationAssertion The registration assertion JSON object as returned by
@@ -764,6 +799,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 更新与给定设备关联的最后一个已知网关。
      * Updates the last known gateway associated with the given device.
      *
      * @param registrationAssertion The registration assertion JSON object as returned by
@@ -828,6 +864,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 获取租户的配置信息。
      * Gets configuration information for a tenant.
      * <p>
      * The returned JSON object contains information as defined by Hono's
@@ -873,6 +910,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 注册检查以验证该组件是否连接到它所依赖的服务。
      * Registers checks which verify that this component is connected to the services it depends on.
      */
     @Override
@@ -897,6 +935,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 如果此协议适配器的 vert.x 事件循环是非阻塞的，则注册一个成功的活动检查。
      * Registers a liveness check which succeeds if
      * the vert.x event loop of this protocol adapter is not blocked.
      *
@@ -925,6 +964,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 发送连接事件
      * Triggers the creation of a <em>connected</em> event.
      *
      * @param remoteId The remote ID.
@@ -963,6 +1003,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 发送失去连接事件
      * Triggers the creation of a <em>disconnected</em> event.
      *
      * @param remoteId The remote ID.
@@ -1001,6 +1042,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 为将在不确定时间内保持连接的设备发送 <em>空通知</em> 事件。
      * Sends an <em>empty notification</em> event for a device that will remain
      * connected for an indeterminate amount of time.
      * <p>
@@ -1027,6 +1069,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 为已与协议适配器断开连接的设备发送 <em>空通知</em> 事件。
      * Sends an <em>empty notification</em> event for a device that has disconnected
      * from a protocol adapter.
      * <p>
@@ -1098,6 +1141,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 检查请求正文中传递的payload是否与指示的内容类型一致。
      * Checks if the payload conveyed in the body of a request is consistent with the indicated content type.
      *
      * @param contentType The indicated content type.
@@ -1115,8 +1159,10 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 注册一个尝试在协议适配器上下文上运行操作的健康检查。
      * Registers a health check which tries to run an action on the protocol adapter context.
      * <p>
+     *     如果协议适配器 vert.x 事件循环被阻塞，则健康检查过程将不会在定义的超时时间内以 OK 状态完成。
      * If the protocol adapter vert.x event loop is blocked, the health check procedure will not complete
      * with OK status within the defined timeout.
      *
@@ -1142,6 +1188,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 获取用于配置服务器端信任锚的选项。
      * Gets the options for configuring the server side trust anchor.
      * <p>
      * This implementation returns the options returned by
@@ -1164,6 +1211,7 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 将设备连接尝试期间发生的错误映射到相应的结果。
      * Maps an error that occurred during a device's connection attempt to a
      * corresponding outcome.
      *
@@ -1206,13 +1254,15 @@ public abstract class AbstractProtocolAdapterBase<T extends ProtocolAdapterPrope
     }
 
     /**
+     * 检查给定的错误是否是终端错误。
      * Checks if the given error is terminal or not.
      * <p>
+     *     下面列出了归类为终端的错误。
      * The errors that are classified as terminal are listed below.
      * <ul>
-     * <li>The adapter is disabled for the tenant that the client belongs to.</li>
-     * <li>The authenticated device or gateway is disabled or not registered.</li>
-     * <li>The tenant is disabled or does not exist.</li>
+     * <li>The adapter is disabled for the tenant that the client belongs to.该适配器已为客户端所属的租户禁用。</li>
+     * <li>The authenticated device or gateway is disabled or not registered.已验证的设备或网关已禁用或未注册。</li>
+     * <li>The tenant is disabled or does not exist.租户已禁用或不存在。</li>
      * </ul>
      *
      * @param error The error to be checked.

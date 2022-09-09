@@ -43,6 +43,7 @@ public final class UsernamePasswordAuthProvider extends CredentialsApiAuthProvid
     private final HonoPasswordEncoder pwdEncoder;
 
     /**
+     * 为给定的配置创建一个新的提供者。
      * Creates a new provider for a given configuration.
      *
      * @param credentialsClient The client to use for accessing the Credentials service.
@@ -55,10 +56,13 @@ public final class UsernamePasswordAuthProvider extends CredentialsApiAuthProvid
     }
 
     /**
+     * 为给定的配置创建一个新的提供者。
      * Creates a new provider for a given configuration.
      *
-     * @param credentialsClient The client to use for accessing the Credentials service.
-     * @param pwdEncoder The object to use for validating hashed passwords.
+     * @param credentialsClient 用于访问凭据服务的客户端。
+     *                          The client to use for accessing the Credentials service.
+     * @param pwdEncoder 用于验证散列（哈希）密码的对象。
+     *                  The object to use for validating hashed passwords.
      * @param tracer The tracer instance.
      * @throws NullPointerException if any of the parameters are {@code null}.
      */
@@ -73,15 +77,19 @@ public final class UsernamePasswordAuthProvider extends CredentialsApiAuthProvid
     }
 
     /**
+     * 根据设备提供的身份验证信息创建 {@link UsernamePasswordCredentials} 实例。
      * Creates a {@link UsernamePasswordCredentials} instance from auth info provided by a
      * device.
      * <p>
+     *     传入的 JSON 对象需要包含 <em>username</em> 和 <em>password</em> 属性。
      * The JSON object passed in is required to contain a <em>username</em> and a
      * <em>password</em> property.
      *
-     * @param authInfo The credentials provided by the device. These usually get assembled via
+     * @param authInfo 设备提供的凭据。 这些通常通过 {@link AuthHandler#parseCredentials(org.eclipse.hono.util.ExecutionContext)} 组装。
+     *              The credentials provided by the device. These usually get assembled via
      *            {@link AuthHandler#parseCredentials(org.eclipse.hono.util.ExecutionContext)}.
-     * @return The {@link UsernamePasswordCredentials} instance created from the auth info or
+     * @return 从身份验证信息创建的 {@link UsernamePasswordCredentials} 实例，如果身份验证信息不包含所需信息，则为 {@code null}。
+     *          The {@link UsernamePasswordCredentials} instance created from the auth info or
      *         {@code null} if the auth info does not contain the required information.
      * @throws NullPointerException if the auth info is {@code null}.
      */
@@ -98,6 +106,7 @@ public final class UsernamePasswordAuthProvider extends CredentialsApiAuthProvid
         clientContext.remove(CredentialsConstants.FIELD_PASSWORD);
 
         if (password.isEmpty()) {
+            //如果密码为空字符串，则从用户名中解析用户名:密码
             return tryGetCredentialsEncodedInUsername(username, clientContext);
         } else {
             return UsernamePasswordCredentials.create(username, password, clientContext);

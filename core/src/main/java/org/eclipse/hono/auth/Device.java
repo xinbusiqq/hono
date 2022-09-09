@@ -22,6 +22,7 @@ import io.vertx.core.json.JsonObject;
 
 
 /**
+ * 一个经过身份验证的设备对象
  * An authenticated client of a protocol adapter representing a device.
  */
 public class Device implements Principal {

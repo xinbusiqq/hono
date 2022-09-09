@@ -34,6 +34,7 @@ public final class DeviceConnectionClientAdapter implements CommandRouterClient,
     private final DeviceConnectionClient deviceConnectionClient;
 
     /**
+     * 为设备连接服务客户端创建一个新适配器。
      * Creates a new adapter for a Device Connection service client.
      *
      * @param client The client that needs to be adapted.

@@ -40,11 +40,14 @@ import io.vertx.ext.web.handler.impl.AuthenticationHandlerImpl;
 
 
 /**
+ * 使用 X.509 客户端证书对 HTTP 客户端进行身份验证的处理程序。
  * A handler for authenticating HTTP clients using X.509 client certificates.
  * <p>
+ *     成功验证证书后，证书的主题 DN 用于检索设备的 X.509 凭据，以确定设备标识符。
  * On successful validation of the certificate, the subject DN of the certificate is used
  * to retrieve X.509 credentials for the device in order to determine the device identifier. 
  * <p>
+ * 除此之外，这里还添加了对 {@link PreCredentialsValidationHandler} 和将 span 上下文传输到 AuthenticationProvider 的支持。
  * Apart from that, support for a {@link PreCredentialsValidationHandler} and for
  * transferring a span context to the AuthenticationProvider is added here.
  *
@@ -58,6 +61,7 @@ public class X509AuthHandler extends AuthenticationHandlerImpl<DeviceCredentials
     private final PreCredentialsValidationHandler<HttpContext> preCredentialsValidationHandler;
 
     /**
+     * 为身份验证提供程序和租户服务客户端创建一个新处理程序。
      * Creates a new handler for an authentication provider and a
      * Tenant service client.
      *
@@ -73,12 +77,16 @@ public class X509AuthHandler extends AuthenticationHandlerImpl<DeviceCredentials
     }
 
     /**
+     * 为身份验证提供者和租户服务客户端创建一个新处理程序。
      * Creates a new handler for an authentication provider and a
      * Tenant service client.
      *
-     * @param clientAuth The service to use for validating the client's certificate path.
-     * @param authProvider The authentication provider to use for verifying the device identity.
-     * @param preCredentialsValidationHandler An optional handler to invoke after the credentials got determined and
+     * @param clientAuth 用于验证客户端证书路径的服务。The service to use for validating the client's certificate path.
+     * @param authProvider 用于验证设备身份的身份验证提供者。The authentication provider to use for verifying the device identity.
+     * @param preCredentialsValidationHandler 在确定凭据之后和验证之前调用的可选处理程序。
+     *            可用于在完成可能昂贵的凭据验证之前使用凭据和租户信息执行检查。
+     *            处理程序返回的失败future将使相应的身份验证尝试失败。
+     *            An optional handler to invoke after the credentials got determined and
      *            before they get validated. Can be used to perform checks using the credentials and tenant information
      *            before the potentially expensive credentials validation is done. A failed future returned by the
      *            handler will fail the corresponding authentication attempt.

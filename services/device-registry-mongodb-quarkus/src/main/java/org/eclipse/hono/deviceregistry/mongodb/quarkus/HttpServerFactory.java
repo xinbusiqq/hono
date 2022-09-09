@@ -87,6 +87,7 @@ public class HttpServerFactory {
     }
 
     /**
+     * 创建一个带有暴露 Hono 设备注册管理 API 的 HTTP endpoint服务。
      * Creates a server with an HTTP endpoint exposing Hono's Device Registry Management API.
      *
      * @return The server.

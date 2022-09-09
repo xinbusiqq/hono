@@ -57,15 +57,20 @@ public class SpringBasedHonoPasswordEncoder implements HonoPasswordEncoder {
     private final SecureRandom secureRandom;
 
     /**
+     * 创建一个新的编码器。
      * Creates a new encoder.
      * <p>
+     *     此构造函数将创建一个新的 {@code SecureRandom-安全随机数}，如下所示：
      * This constructor will create a new {@code SecureRandom}
      * as follows:
      * <ol>
-     * <li>try to create a SecureRandom using algorithm <em>NativePRNGNonBlocking</em></li>
-     * <li>if that fails, create a default SecureRandom, i.e. without specifying an
+     * <li>尝试使用算法创建 SecureRandom <em>NativePRNGNonBlocking</em>
+     *      try to create a SecureRandom using algorithm <em>NativePRNGNonBlocking</em></li>
+     * <li>如果失败，创建一个默认的 SecureRandom，即不指定算法
+     *     if that fails, create a default SecureRandom, i.e. without specifying an
      * algorithm</li>
      * </ol>
+     * 然后调用 {@link #SpringBasedHonoPasswordEncoder(SecureRandom, int)}。
      * and then invoke {@link #SpringBasedHonoPasswordEncoder(SecureRandom, int)}.
      *
      * @see "https://tersesystems.com/blog/2015/12/17/the-right-way-to-use-securerandom/"

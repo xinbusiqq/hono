@@ -40,6 +40,7 @@ import io.vertx.ext.web.handler.AuthenticationHandler;
 import io.vertx.ext.web.handler.BodyHandler;
 
 /**
+ * 用于使用 HTTP 实现服务的基类。
  * A base class for implementing services using HTTP.
  *
  * @param <T> The type of configuration properties used by this service.
@@ -148,8 +149,10 @@ public abstract class HttpServiceBase<T extends ServiceConfigProperties> extends
     }
 
     /**
+     * 在 http 服务器启动之前调用。
      * Invoked before the http server is started.
      * <p>
+     *     子类可以重写此方法来执行任何类型的初始化工作。
      * Subclasses may override this method to do any kind of initialization work.
      *
      * @return A future indicating the outcome of the operation. The start up process fails if the returned future

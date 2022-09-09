@@ -34,6 +34,7 @@ import io.vertx.core.Promise;
 
 
 /**
+ * 使用 {@link CertPathValidator} 验证设备的证书链。
  * Validates a device's certificate chain using a {@link CertPathValidator}.
  *
  */

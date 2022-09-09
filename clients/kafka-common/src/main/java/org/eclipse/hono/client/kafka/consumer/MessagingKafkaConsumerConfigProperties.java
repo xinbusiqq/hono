@@ -20,6 +20,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.vertx.kafka.client.serialization.BufferDeserializer;
 
 /**
+ * 用于 Hono 消息传递的 Kafka 消费者的配置属性。
  * Configuration properties for Kafka consumers used for Hono's messaging.
  *
  * Record keys will be deserialized with {@link StringDeserializer}, the values with {@link BufferDeserializer}.

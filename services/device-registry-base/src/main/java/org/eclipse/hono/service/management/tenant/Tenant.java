@@ -519,6 +519,7 @@ public class Tenant {
     }
 
     /**
+     * 断言此租户的信任锚 ID 是唯一的，并且还为未提供 ID 的每个信任锚分配唯一 ID。
      * Asserts that the trust anchor IDs are unique for this tenant and also assigns a unique ID
      * to each trust anchor for which the ID is not provided.
      *
@@ -532,6 +533,7 @@ public class Tenant {
     }
 
     /**
+     * 为每个尚未拥有的信任锚分配唯一 ID
      * Assigns a unique ID to each trust anchor that does not have one already.
      */
     private void createMissingTrustAnchorIds() {
@@ -539,7 +541,8 @@ public class Tenant {
                 .ifPresent(trustAnchors -> trustAnchors.stream()
                         .filter(trustAnchor -> Objects.isNull(trustAnchor.getId()))
                         .forEach(trustAnchor -> {
-                            //Check if the generated id already exists, if so then generate a new id
+                            //检查生成的id是否已经存在，如果存在则生成一个新的id
+                            // Check if the generated id already exists, if so then generate a new id
                             // else set the generated id.
                             String generatedId;
                             do {
@@ -559,6 +562,7 @@ public class Tenant {
     }
 
     /**
+     * 断言此租户的信任锚 ID在此证书中不重复
      * Assert that the trust anchor IDs are unique for this tenant.
      *
      * @throws IllegalStateException if the trust anchor IDs are not unique for this tenant.
@@ -579,7 +583,7 @@ public class Tenant {
                     });
 
             if (trustAnchorIds.size() != count.get()) {
-                throw new IllegalStateException("trusted anchor IDs must be unique within each tenant object");
+                throw new IllegalStateException("受信任的锚点 ID 在每个租户对象中必须是唯一的 trusted anchor IDs must be unique within each tenant object");
             }
         }
     }

@@ -43,6 +43,9 @@ import io.vertx.ext.web.handler.ChainAuthHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
 /**
+ * 一个基于 Vert.x 的 Hono 协议适配器，用于使用 HTTP访问 Hono 的 Telemetry和 Event API，
+ * 如 https://www.eclipse.org/hono/docs/user-guide/http-adapter 中所述。
+ *
  * A Vert.x based Hono protocol adapter for accessing Hono's Telemetry &amp; Event API using HTTP
  * as described in https://www.eclipse.org/hono/docs/user-guide/http-adapter.
  */
@@ -59,9 +62,11 @@ public final class VertxBasedHttpProtocolAdapter extends AbstractVertxBasedHttpP
     private DeviceCredentialsAuthProvider<SubjectDnCredentials> clientCertAuthProvider;
 
     /**
+     * 设置提供程序以用于根据用户名和密码对设备进行身份验证。
      * Sets the provider to use for authenticating devices based on
      * a username and password.
      * <p>
+     *     如果未使用此方法显式设置，则会在启动期间创建 {@code UsernamePasswordAuthProvider}。
      * If not set explicitly using this method, a {@code UsernamePasswordAuthProvider}
      * will be created during startup.
      *
@@ -73,6 +78,7 @@ public final class VertxBasedHttpProtocolAdapter extends AbstractVertxBasedHttpP
     }
 
     /**
+     * 设置基于客户端证书的provider，用于对设备认证
      * Sets the provider to use for authenticating devices based on
      * a client certificate.
      * <p>
@@ -101,6 +107,7 @@ public final class VertxBasedHttpProtocolAdapter extends AbstractVertxBasedHttpP
 
         if (getConfig().isAuthenticationRequired()) {
 
+            //链式身份认证处理器
             final ChainAuthHandler authHandler = ChainAuthHandler.any();
             authHandler.add(new X509AuthHandler(
                     new TenantServiceBasedX509Authentication(getTenantClient(), tracer),

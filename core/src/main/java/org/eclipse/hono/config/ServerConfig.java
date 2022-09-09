@@ -171,6 +171,7 @@ public class ServerConfig extends AbstractConfig {
     }
 
     /**
+     * 检查此服务是否应侦听不安全的端口。
      * Checks whether this service should listen to the insecure port.
      * <p>
      * The default value of this property is {@code false}.

@@ -39,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 /**
+ * 一个可信的 CA 配置
  * A trusted CA configuration.
  * <p>
  * Represents the <em>TrustedCA</em> schema object defined in the

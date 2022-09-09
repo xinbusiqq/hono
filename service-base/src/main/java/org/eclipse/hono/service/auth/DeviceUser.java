@@ -24,12 +24,14 @@ import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.authorization.Authorization;
 
 /**
+ * 为设备实现了User接口，可用于授权验证。
  * A class that implements the {@link User} interface for devices that then can be used for authorization validation.
  *
 */
 public class DeviceUser extends Device implements User {
 
     /**
+     * 为租户和设备标识符创建新设备（可用作 {@link User}）。
      * Creates a new device (usable as a {@link User}) for a tenant and device identifier.
      *
      * @param tenantId The tenant.

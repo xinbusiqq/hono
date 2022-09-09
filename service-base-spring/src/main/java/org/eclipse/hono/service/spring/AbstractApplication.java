@@ -45,6 +45,7 @@ public class AbstractApplication extends AbstractBaseApplication {
     }
 
     /**
+     * 添加用于创建服务实例的工厂，以便在启动期间部署 Vert.x 容器。
      * Adds the factories to use for creating service instances to
      * deploy the Vert.x container during startup.
      * <p>
@@ -70,26 +71,32 @@ public class AbstractApplication extends AbstractBaseApplication {
     }
 
     /**
+     * 在部署服务实例之前调用。
      * Invoked before the service instances are being deployed.
      * <p>
+     *     可能会被覆盖以准备服务实例的环境，例如 部署额外的（先决条件）verticles。
      * May be overridden to prepare the environment for the service instances, e.g. deploying additional (prerequisite)
      * verticles.
      * <p>
+     *     这个默认实现只是返回一个成功的future。
      * This default implementation simply returns a succeeded future.
      *
-     * @param maxInstances The number of service verticle instances to deploy.
+     * @param maxInstances The number of service verticle instances to deploy.要部署的服务 Verticle 实例数。
      * @return A future indicating success. Application start-up fails if the returned future fails.
+     * 预示成功的Future。 如果返回的 future 失败，应用程序启动失败。
      */
     protected Future<Void> deployRequiredVerticles(final int maxInstances) {
         return Future.succeededFuture();
     }
 
     /**
+     * 部署服务实例。
      * Deploys the service instances.
      *
      * @param maxInstances The number of instances to deploy.
      * @return A future indicating the outcome of the operation. The future will
      *         be succeeded if the service instances have been deployed successfully.
+     *         指示操作结果的future。 如果服务实例部署成功，future 就会成功。
      */
     private Future<Void> deployServiceVerticles(final int maxInstances) {
 
@@ -115,8 +122,10 @@ public class AbstractApplication extends AbstractBaseApplication {
     }
 
     /**
+     * 在服务实例对象部署到 vert.x 之前调用。
      * Invoked before a service instance object gets deployed to vert.x.
      * <p>
+     *     这个默认实现什么都不做。
      * This default implementation does nothing.
      *
      * @param serviceInstance The instance.
@@ -126,8 +135,10 @@ public class AbstractApplication extends AbstractBaseApplication {
     }
 
     /**
+     * 在服务实例对象成功部署到 vert.x 后调用。
      * Invoked after a service instance object has been deployed successfully to vert.x.
      * <p>
+     *     这个默认实现什么都不做。
      * This default implementation does nothing.
      *
      * @param serviceInstance The instance.

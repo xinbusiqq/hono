@@ -77,10 +77,12 @@ public final class TenantServiceBasedX509Authentication implements X509Authentic
     }
 
     /**
+     * 为租户服务客户端创建一个新实例。
      * Creates a new instance for a Tenant service client.
      *
-     * @param tenantClient The client to use for accessing the Tenant service.
-     * @param tracer The <em>OpenTracing</em> tracer to use for tracking the process of
+     * @param tenantClient 用于访问租户服务的客户端。The client to use for accessing the Tenant service.
+     * @param tracer <em>OpenTracing</em> 跟踪器，用于跟踪验证客户端的过程。
+     *               The <em>OpenTracing</em> tracer to use for tracking the process of
      *               authenticating the client.
      */
     public TenantServiceBasedX509Authentication(
@@ -90,6 +92,7 @@ public final class TenantServiceBasedX509Authentication implements X509Authentic
     }
 
     /**
+     * 为租户服务客户端创建一个新实例。
      * Creates a new instance for a Tenant service client.
      *
      * @param tenantClient The client to use for accessing the Tenant service.

@@ -40,6 +40,7 @@ import io.vertx.ext.auth.User;
 
 
 /**
+ * 用于实现身份验证提供程序的基类，根据使用 Hono 的 <em>Credentials</em> API 检索的记录信息验证设备提供的凭据。
  * A base class for implementing authentication providers that verify credentials provided by devices
  * against information on record retrieved using Hono's <em>Credentials</em> API.
  *
@@ -68,6 +69,7 @@ public abstract class CredentialsApiAuthProvider<T extends AbstractDeviceCredent
     }
 
     /**
+     * 从 Credentials 服务中检索凭据。
      * Retrieves credentials from the Credentials service.
      *
      * @param deviceCredentials The credentials provided by the device.

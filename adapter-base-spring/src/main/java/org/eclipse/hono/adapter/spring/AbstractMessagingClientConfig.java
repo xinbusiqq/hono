@@ -60,6 +60,7 @@ public abstract class AbstractMessagingClientConfig implements ComponentNameProv
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
+     * 根据配置创建新的消息传递客户端提供者(包括kafka、amqp两个版本的telemetry、event、CommandResponse发送者)
      * Creates new messaging client providers according to the configuration in use.
      *
      * @param samplerFactory The sampler factory to use.
@@ -207,6 +208,7 @@ public abstract class AbstractMessagingClientConfig implements ComponentNameProv
     }
 
     /**
+     * 公开配置属性以作为 Spring bean 访问 AMQP 消息传递网络。
      * Exposes configuration properties for accessing the AMQP Messaging Network as a Spring bean.
      * <p>
      * A default set of properties, on top of which the configured properties will by loaded, can be set in subclasses

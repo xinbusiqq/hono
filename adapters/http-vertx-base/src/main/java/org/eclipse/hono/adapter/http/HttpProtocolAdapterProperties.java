@@ -19,6 +19,7 @@ import org.eclipse.hono.config.ProtocolAdapterProperties;
 
 
 /**
+ * 配置基于 HTTP 的协议适配器的属性。
  * Properties for configuring an HTTP based protocol adapter.
  *
  */

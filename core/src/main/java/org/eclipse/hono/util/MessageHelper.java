@@ -204,6 +204,7 @@ public final class MessageHelper {
     public static final String SYS_PROPERTY_TO = "to";
 
     /**
+     * ttd 值用于指示设备将保持连接状态，直至另行通知。
      * The time-til-disconnect value to use for indicating that a device will remain connected until further notice.
      */
     public static final int TTD_VALUE_UNLIMITED = -1;

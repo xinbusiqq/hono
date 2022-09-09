@@ -34,11 +34,15 @@ import io.vertx.ext.web.handler.impl.HTTPAuthorizationHandler;
 
 
 /**
+ * vert.x web 的标准 {@code BasicAuthHandlerImpl} 的 Hono 特定版本，
+ * 当发生身份验证失败时，它提取和处理 {@link org.eclipse.hono.client.ServiceInvocationException}
+ * 作为 {@code HttpStatusException} 中的根本原因 .
  * A Hono specific version of vert.x web's standard {@code BasicAuthHandlerImpl}
  * that extracts and handles a {@link org.eclipse.hono.client.ServiceInvocationException} conveyed as the
  * root cause in an {@code HttpStatusException} when an authentication failure
  * occurs.
  * <p>
+ * 除此之外，这里还添加了对 {@link PreCredentialsValidationHandler} 和将 span 上下文传输到 AuthProvider 的支持。
  * Apart from that, support for a {@link PreCredentialsValidationHandler} and for
  * transferring a span context to the AuthProvider is added here.
  *
@@ -59,11 +63,17 @@ public class HonoBasicAuthHandler extends HTTPAuthorizationHandler<Authenticatio
     }
 
     /**
+     * 为身份验证提供者和领域名称创建一个新的处理程序。
      * Creates a new handler for an authentication provider and a realm name.
      *
-     * @param authProvider The provider to use for validating credentials.
-     * @param realm The realm name.
-     * @param preCredentialsValidationHandler An optional handler to invoke after the credentials got determined and
+     * @param authProvider 用于验证凭据的提供程序。
+     *                     The provider to use for validating credentials.
+     * @param realm 领域名称
+     *              The realm name.
+     * @param preCredentialsValidationHandler 在确定凭据之后和验证之前调用的可选处理程序。
+     *            可用于在完成可能昂贵的凭据验证之前使用凭据和租户信息执行检查。
+     *            处理程序返回的失败future将使相应的身份验证尝试失败。
+     *            An optional handler to invoke after the credentials got determined and
      *            before they get validated. Can be used to perform checks using the credentials and tenant information
      *            before the potentially expensive credentials validation is done. A failed future returned by the
      *            handler will fail the corresponding authentication attempt.

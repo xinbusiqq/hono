@@ -37,6 +37,7 @@ import io.vertx.core.Future;
 public interface ProtocolAdapter {
 
     /**
+     * 获取adapter-type名称
      * Gets this adapter's type name.
      * <p>
      * The name should be unique among all protocol adapters that are part of a Hono installation. There is no specific
@@ -53,6 +54,7 @@ public interface ProtocolAdapter {
     String getTypeName();
 
     /**
+     * 获取下游遥测和事件消息的默认属性。
      * Gets default properties for downstream telemetry and event messages.
      *
      * @param context The execution context for processing the downstream message.
@@ -61,6 +63,7 @@ public interface ProtocolAdapter {
     Map<String, Object> getDownstreamMessageProperties(TelemetryExecutionContext context);
 
     /**
+     * 获取用于访问租户服务的客户端。
      * Gets the client used for accessing the Tenant service.
      *
      * @return The client.
@@ -68,6 +71,7 @@ public interface ProtocolAdapter {
     TenantClient getTenantClient();
 
     /**
+     * 获取用于访问 Credentials 服务的客户端。
      * Gets the client used for accessing the Credentials service.
      *
      * @return The client.
@@ -75,6 +79,7 @@ public interface ProtocolAdapter {
     CredentialsClient getCredentialsClient();
 
     /**
+     * 获取用于向下游发送遥测消息的客户端。
      * Gets the client being used for sending telemetry messages downstream.
      *
      * @param tenant The tenant for which to send telemetry messages.
@@ -83,6 +88,7 @@ public interface ProtocolAdapter {
     TelemetrySender getTelemetrySender(TenantObject tenant);
 
     /**
+     * 获取用于向下游发送事件的客户端。
      * Gets the client being used for sending events downstream.
      *
      * @param tenant The tenant for which to send events.
@@ -91,6 +97,7 @@ public interface ProtocolAdapter {
     EventSender getEventSender(TenantObject tenant);
 
     /**
+     * 获取用于创建客户端以接收命令的工厂。
      * Gets the factory used for creating clients to receive commands.
      *
      * @return The factory.
@@ -98,6 +105,7 @@ public interface ProtocolAdapter {
     CommandConsumerFactory getCommandConsumerFactory();
 
     /**
+     * 获取用于向下游发送命令响应消息的客户端。
      * Gets the client being used for sending command response messages downstream.
      * <p>
      * Per default, the client using the given messaging type will be chosen. Only if
@@ -110,7 +118,8 @@ public interface ProtocolAdapter {
      */
     CommandResponseSender getCommandResponseSender(MessagingType messagingType, TenantObject tenant);
 
-        /**
+    /**
+     * 获取设备注册状态的断言。
      * Gets an assertion of a device's registration status.
      * <p>
      * Note that this method will also update the last gateway associated with
@@ -137,6 +146,7 @@ public interface ProtocolAdapter {
             SpanContext context);
 
     /**
+     * 发送一个 空通知，其中包含给定设备的ttd。
      * Sends an <em>empty notification</em> containing a given <em>time until disconnect</em> for
      * a device.
      *
@@ -159,6 +169,7 @@ public interface ProtocolAdapter {
             SpanContext context);
 
     /**
+     * 检查是否为给定租户启用了此适配器，要求租户本身也启用。
      * Checks if this adapter is enabled for a given tenant, requiring the tenant itself to be enabled as well.
      *
      * @param tenantConfig The tenant to check for.
@@ -170,6 +181,7 @@ public interface ProtocolAdapter {
     Future<TenantObject> isAdapterEnabled(TenantObject tenantConfig);
 
     /**
+     * 检查给定payload是否会超出租户的消息限制。
      * Checks if a tenant's message limit will be exceeded by a given payload.
      *
      * @param tenantConfig The tenant to check the message limit for.
@@ -189,6 +201,7 @@ public interface ProtocolAdapter {
             SpanContext spanContext);
 
     /**
+     * 获取协议适配器给定租户设备的等待上游命令的秒数。
      * Gets the number of seconds after which this protocol adapter should give up waiting for an upstream command for a
      * device of a given tenant.
      * <p>

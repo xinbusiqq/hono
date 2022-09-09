@@ -120,6 +120,7 @@ public abstract class AbstractAdapterConfig extends AbstractMessagingClientConfi
     private MeterRegistry meterRegistry;
 
     /**
+     * 设置所有协议适配器所需的协作者。
      * Sets collaborators required by all protocol adapters.
      *
      * @param adapter The adapter to set the collaborators on.
@@ -268,6 +269,7 @@ public abstract class AbstractAdapterConfig extends AbstractMessagingClientConfi
     }
 
     /**
+     * 设置Kafka客户端的配置属性，该客户端创建command-internal topic，并设置为 Spring bean。
      * Exposes configuration properties for the Kafka client that creates internal command topics as a Spring bean.
      *
      * @return The properties.
@@ -310,6 +312,7 @@ public abstract class AbstractAdapterConfig extends AbstractMessagingClientConfi
     }
 
     /**
+     * 公开一个客户端以作为 Spring bean 访问 <em>Device Registration</em> API。
      * Exposes a client for accessing the <em>Device Registration</em> API as a Spring bean.
      *
      * @param samplerFactory The sampler factory to use.
@@ -450,6 +453,7 @@ public abstract class AbstractAdapterConfig extends AbstractMessagingClientConfi
     }
 
     /**
+     * 公开一个客户端以作为 Spring bean 访问 <em>Tenant</em> API。
      * Exposes a client for accessing the <em>Tenant</em> API as a Spring bean.
      *
      * @param samplerFactory The sampler factory to use.
@@ -771,6 +775,7 @@ public abstract class AbstractAdapterConfig extends AbstractMessagingClientConfi
     }
 
     /**
+     * 将通知接收器暴露为 Spring bean。
      * Exposes a notification receiver as a Spring bean.
      *
      * @param vertx The vertx instance to use.

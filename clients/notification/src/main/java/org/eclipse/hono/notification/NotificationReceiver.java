@@ -24,8 +24,10 @@ import io.vertx.core.Handler;
 public interface NotificationReceiver extends Lifecycle {
 
     /**
+     * 为特定类型的通知注册一个通知消费者。
      * Registers a notification consumer for a specific type of notifications.
      * <p>
+     *     必须在调用 {@link #start()} 方法之前调用。
      * Has to be invoked before the {@link #start()} method is called.
      *
      * @param notificationType The class of the notifications to consume.

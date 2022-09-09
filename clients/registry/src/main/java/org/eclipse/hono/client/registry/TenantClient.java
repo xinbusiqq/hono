@@ -31,6 +31,7 @@ import io.vertx.core.Future;
 public interface TenantClient extends Lifecycle {
 
     /**
+     * 获取租户的配置信息。
      * Gets configuration information for a tenant.
      *
      * @param tenantId The ID of the tenant to retrieve information for.

@@ -20,6 +20,7 @@ import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithParentName;
 
 /**
+ * HTTP endpoint的通用配置属性。
  * Common configuration properties for the HTTP endpoint.
  *
  */

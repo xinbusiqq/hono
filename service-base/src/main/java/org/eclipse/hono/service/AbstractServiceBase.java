@@ -229,6 +229,7 @@ public abstract class AbstractServiceBase<T extends ServiceConfigProperties> ext
     }
 
     /**
+     * 验证此服务是否已正确配置为绑定到至少一个安全或不安全端口。
      * Verifies that this service is properly configured to bind to at least one of the secure or insecure ports.
      *
      * @return A future indicating the outcome of the check.

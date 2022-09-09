@@ -19,6 +19,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 
 /**
+ * 使具有生命周期支持的组件能够用作 vert.x verticle。
  * Enables a component with life cycle support to be used as a vert.x verticle.
  */
 public class WrappedLifecycleComponentVerticle extends AbstractVerticle {
@@ -28,7 +29,8 @@ public class WrappedLifecycleComponentVerticle extends AbstractVerticle {
     /**
      * Creates a new WrappedLifecycleComponentVerticle.
      *
-     * @param lifecycleComponent The component whose <em>start</em> and <em>stop</em> methods shall be called
+     * @param lifecycleComponent 组件的 <em>start</em> 和 <em>stop</em> 方法应在此 Verticle 的 {@link #start(Promise)} 和 {@link #stop(Promise)} 上调用。
+     *                           The component whose <em>start</em> and <em>stop</em> methods shall be called
      *                           on {@link #start(Promise)} and {@link #stop(Promise)} of this verticle.
      * @throws NullPointerException If lifecycleComponent is {@code null}.
      */

@@ -44,6 +44,7 @@ public abstract class RequestResponseApiConstants {
      */
     public static final String FIELD_PAYLOAD_DEVICE_ID = Constants.JSON_FIELD_DEVICE_ID;
     /**
+     * 包含已为租户配置的 CA 证书的 <em>subject DN</em> 的属性的名称。 主题 DN 按照 <a href="https://tools.ietf.org/html/rfc2253#section-2">RFC 2253 第 2 节</a> 的定义进行序列化。
      * The name of the property that contains the <em>subject DN</em> of the CA certificate
      * that has been configured for a tenant. The subject DN is serialized as defined by
      * <a href="https://tools.ietf.org/html/rfc2253#section-2">RFC 2253, Section 2</a>.
@@ -54,6 +55,7 @@ public abstract class RequestResponseApiConstants {
      */
     public static final String FIELD_PAYLOAD_TENANT_ID = Constants.JSON_FIELD_TENANT_ID;
     /**
+     * 定义模板的属性名称，该模板用于生成要在身份验证和自动配置期间使用的身份验证标识符。
      * The name of the property that defines the template for generating authentication identifier
      * to be used during authentication and auto-provisioning.
      */

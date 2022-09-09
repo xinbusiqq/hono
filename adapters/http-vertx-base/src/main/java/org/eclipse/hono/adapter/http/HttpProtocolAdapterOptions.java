@@ -21,6 +21,7 @@ import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithParentName;
 
 /**
+ * 配置基于 HTTP 协议适配器的选项。
  * Options for configuring an HTTP based protocol adapter.
  *
  */
